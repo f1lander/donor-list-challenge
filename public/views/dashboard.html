@@ -1,37 +1,63 @@
-<div ng-controller="AppCtrl" layout="row">
+<div layout="row">
 
     <md-sidenav style="height: 100vh;" layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
 
         <md-toolbar>
-            <div class="img-holder">
-                <h4>DonorApp</h4>
-                <img style="width:90px;height:90px;" src='https://www.blue-infotainments.com/wp-content/uploads/2014/08/20120910142240-donate-blood-300x300.png' />
+            <div class="logo-nav-holder">
+                <div layout="row" layout-align="left center">
+                    <div> <img class="logo-nav-item" style="width:60px;height:60px;" src='https://www.blue-infotainments.com/wp-content/uploads/2014/08/20120910142240-donate-blood-300x300.png'
+                        /></div>
+                    <div>DonorApp</div>
+
+                </div>
+
             </div>
         </md-toolbar>
         <md-list>
             <div layout-gt-xs="colum">
                 <md-input-container class="md-block" flex-gt-xs>
                     <label>Name</label>
-                    <input ng-model="donor.name">
+                    <input ng-model="donor.name" placeholder="Bilal">
                 </md-input-container>
                 <md-input-container class="md-block" flex-gt-xs>
                     <label>Last Name</label>
-                    <input ng-model="donor.lastName">
+                    <input ng-model="donor.lastName" placeholder="Soylu">
                 </md-input-container>
-                 <md-input-container class="md-block" flex-gt-xs>
+                <md-input-container class="md-block" flex-gt-xs>
                     <label>Address</label>
-                    <input ng-model="donor.address">
+                    <input id="autocomplete" ng-model="donor.address" placeholder="1100 Northwest 2nd Avenue ...">
+                </md-input-container>
+            </div>
+            <div layout-gt-xs="row">
+                <md-input-container class="md-block" flex-gt-xs>
+                    <label>Age</label>
+                    <input ng-model="donor.age" placeholder="24">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-xs>
+                    <label>Weight</label>
+                    <input ng-model="donor.weight" placeholder="80 kg">
+                </md-input-container>
+            </div>
+            <div layout-gt-xs="row">
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Gender</label>
+                    <md-select ng-model="donor.gender">
+                        <md-option ng-repeat="item in genders">
+                            {{item}}
+                        </md-option>
+                    </md-select>
                 </md-input-container>
                 <md-input-container class="md-block" flex-gt-sm>
                     <label>Blood Type</label>
-                    <md-select ng-model="donor.bloodType">
-                        <md-option ng-repeat="item in bloodTypes" >
+                    <md-select ng-model="donor.bloodtype">
+                        <md-option ng-repeat="item in bloodTypes">
                             {{item}}
                         </md-option>
                     </md-select>
                 </md-input-container>
 
             </div>
+            <md-button ng-click="addDonor()" class="md-raised md-warn">Save</md-button>
         </md-list>
 
     </md-sidenav>

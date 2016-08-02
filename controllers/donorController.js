@@ -13,7 +13,7 @@ module.exports = {
     list: function(req, res) {
         donorModel.find(function(err, donors){
             if(err) {
-                return res.json(500, {
+                return res.status(500).json({
                     message: 'Error getting donor.'
                 });
             }
@@ -32,7 +32,7 @@ module.exports = {
         var id = req.params.id;
         donorModel.findOne({_id: id}, function(err, donor){
             if(err) {
-                return res.json(500, {
+                return res.status(500).json( {
                     message: 'Error getting donor.'
                 });
             }
@@ -49,26 +49,30 @@ module.exports = {
      * donorController.create()
      */
     create: function(req, res) {
-        var donor = new donorModel({
+        /**
 			name : req.body.name,
 			lastname : req.body.lastname,
 			location : req.body.location,
-			bloodtype : req.body.bloodtype
-        });
+			bloodtype : req.body.bloodtype,
+            address =  req.body.address ? req.body.address : donor.address;
+            age =  req.body.age ? req.body.age : donor.age;
+            weight =  req.body.weight ? req.body.weight : donor.weight;
+            donor.gender =  req.body.gender ? req.body.gender : donor.gender;
+        } */
+        console.log(req.body.donor);
+        var donor = new donorModel(req.body.donor);
         
-        console.log(donor);
+        //console.log(donor);
 
         donor.save(function(err, donor){
             if(err) {
+                console.log(err);
                 return res.status(500).json({
                     message: 'Error saving donor',
                     error: err
                 });
             }
-            return res.json({
-                message: 'saved',
-                _id: donor._id
-            });
+            return res.json(donor);
         });
     },
 
@@ -79,7 +83,7 @@ module.exports = {
         var id = req.params.id;
         donorModel.findOne({_id: id}, function(err, donor){
             if(err) {
-                return res.json(500, {
+                return res.status(500).json( {
                     message: 'Error saving donor',
                     error: err
                 });
@@ -92,12 +96,16 @@ module.exports = {
 
             donor.name =  req.body.name ? req.body.name : donor.name;
 			donor.lastname =  req.body.lastname ? req.body.lastname : donor.lastname;
+            donor.address =  req.body.address ? req.body.address : donor.address;
+            donor.age =  req.body.age ? req.body.age : donor.age;
+            donor.weight =  req.body.weight ? req.body.weight : donor.weight;
+            donor.gender =  req.body.gender ? req.body.gender : donor.gender;
 			donor.location =  req.body.location ? req.body.location : donor.location;
 			donor.bloodtype =  req.body.bloodtype ? req.body.bloodtype : donor.bloodtype;
 			
             donor.save(function(err, donor){
                 if(err) {
-                    return res.json(500, {
+                    return res.status(500).json( {
                         message: 'Error getting donor.'
                     });
                 }
@@ -118,7 +126,7 @@ module.exports = {
         var id = req.params.id;
         donorModel.findByIdAndRemove(id, function(err, donor){
             if(err) {
-                return res.json(500, {
+                return res.status(500).json( {
                     message: 'Error getting donor.'
                 });
             }

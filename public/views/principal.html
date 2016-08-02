@@ -1,25 +1,26 @@
 <div layout="row">
-	<div flex class="md-content-bg">
-		<div class="checkIns-container">
-			<md-content class="md-content-bg" layout-align="space-around center" layout-xs="row" layout="row">
-				<div flex-xs flex-gt-xs="90" layout="column">
-					<div class="card card--small bounceInLeft" ng-repeat="checkin in checkIns | filter:filterService.search">
-						<div style="background-image: url({{ checkin.image }})" class="card__image"></div>
-						<h4 class="card__title">{{ checkin.customer.name }}</h4>
-						<span class="card__subtitle">{{ checkin.comment}}</span>
-						<span class="card__subtitle card-date">{{ checkin.date | date:'short' }}</span>					
-						<div class="card__action-bar">
-						</div>
-						<div class="card__action-bar card__category">
-						</div>
-					</div>
-					
-				</div>
-			</md-content>
-		</div>
-	</div>
+    <div flex="40" layout="column">
+      <md-card ng-repeat="donor in donors" md-theme="default" md-theme-watch>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">{{donor.name}} {{donor.lastName}}</span>
+            <span class="md-subhead">{{ donor.Address }}</span>
+			<span class="md-subhead">{{ donor.gender }}, {{ donor.age }}, {{ donor.weight }}, {{ donor.bloodType }}</span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-sm card-media">
+				<img class="md-user-avatar" src="{{ donor.gender == 'F' ? genderFemale : genderMale }}" />
+			</div>
+          </md-card-title-media>
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="end center">
+          <md-button>View on map</md-button>
+        </md-card-actions>
+      </md-card>
+	  </div>
 	<div flex class="container-map">
 		<ui-gmap-google-map options="map.options" control="map.control" center='map.center' zoom='map.zoom'>
+        
 			<ui-gmap-marker ng-repeat="m in map.markers" coords="m.coords" icon="m.icon" idkey="m.id"></ui-gmap-marker>
 		</ui-gmap-google-map>
 	</div>

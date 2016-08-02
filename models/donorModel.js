@@ -2,10 +2,14 @@ var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
 var donorSchema = new Schema({
-	name : {type: String, unique: true},
+	name : {type: String},
 	lastname : {type: String},
-	location : { type:[Number], index: '2d', required: true},
-	bloodtype : {type: String, unique: true},
+	address:{type:String},
+	location : { type:[Number], index: '2d', required: true, unique:false},
+	bloodtype : {type: String},
+	gender:{type:String},
+	age:{type:Number},
+	weight:{type:Number}
 });
 
 module.exports = mongoose.model('donor', donorSchema);
