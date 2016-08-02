@@ -14,6 +14,7 @@ app.controller('PrincipalCtrl', function ($scope, $state, uiGmapIsReady, $interv
     localStorage.setItem('place', JSON.stringify({ address: place.formatted_address, lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }));
 
   }
+  
   $scope.initialize = function () {
     // Create the autocomplete object, restricting the search
     // to geographical location types.
