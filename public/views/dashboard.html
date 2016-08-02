@@ -1,0 +1,60 @@
+<div ng-controller="AppCtrl" layout="row">
+
+    <md-sidenav style="height: 100vh;" layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+
+        <md-toolbar>
+            <div class="img-holder">
+                <h4>DonorApp</h4>
+                <img style="width:90px;height:90px;" src='https://www.blue-infotainments.com/wp-content/uploads/2014/08/20120910142240-donate-blood-300x300.png' />
+            </div>
+        </md-toolbar>
+        <md-list>
+            <div layout-gt-xs="colum">
+                <md-input-container class="md-block" flex-gt-xs>
+                    <label>Name</label>
+                    <input ng-model="donor.name">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-xs>
+                    <label>Last Name</label>
+                    <input ng-model="donor.lastName">
+                </md-input-container>
+                 <md-input-container class="md-block" flex-gt-xs>
+                    <label>Address</label>
+                    <input ng-model="donor.address">
+                </md-input-container>
+                <md-input-container class="md-block" flex-gt-sm>
+                    <label>Blood Type</label>
+                    <md-select ng-model="donor.bloodType">
+                        <md-option ng-repeat="item in bloodTypes" >
+                            {{item}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+        </md-list>
+
+    </md-sidenav>
+
+    <div layout="column" class="relative" layout-fill role="main">
+
+        <md-toolbar ng-show="!showSearch">
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" ng-click="toggleLeft('left')" hide-gt-md aria-label="Menu">
+                    <ng-md-icon style="fill: white" icon="menu"></ng-md-icon>
+                </md-button>
+                <h3>
+           Donor Map
+        </h3>
+
+            </div>
+
+        </md-toolbar>
+
+        <md-content classs="md-content-bg" flex>
+            <ui-view layout-fill>
+            </ui-view>
+        </md-content>
+    </div>
+
+</div>
