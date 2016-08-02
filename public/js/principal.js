@@ -1,4 +1,4 @@
-app.controller('PrincipalCtrl', function ($scope, $state, uiGmapIsReady, $interval, $timeout, $log, cfpLoadingBar, $mdSidenav, DonorService, $mdToast) {
+app.controller('PrincipalCtrl', function ($scope, $state, uiGmapIsReady, $interval, $timeout, $log, cfpLoadingBar, $mdSidenav, DonorService, $mdToast, $filter) {
 
   $scope.myDate = new Date();
   $scope.$state = $state;
@@ -7,8 +7,14 @@ app.controller('PrincipalCtrl', function ($scope, $state, uiGmapIsReady, $interv
   $scope.genders = ['F', 'M'];
   $scope.genderFemale = '/img/woman.png';
   $scope.genderMale = '/img/man.png';
-  $scope.place = {};
-  function initialize() {
+  $scope.copyMarkers = [];
+
+  var setPlace = function (place) {
+    localStorage.removeItem('place');
+    localStorage.setItem('place', JSON.stringify({ address: place.formatted_address, lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }));
+
+  }
+  $scope.initialize = function () {
     // Create the autocomplete object, restricting the search
     // to geographical location types.
     $scope.autocomplete = new google.maps.places.Autocomplete(
@@ -18,11 +24,65 @@ app.controller('PrincipalCtrl', function ($scope, $state, uiGmapIsReady, $interv
     // When the user selects an address from the dropdown,
     // populate the address fields in the form.
     google.maps.event.addListener($scope.autocomplete, 'place_changed', function () {
-      $scope.place = $scope.autocomplete.getPlace();
+      var _place = $scope.autocomplete.getPlace();
+      //  angular.extend($scope.place,place);
+      setPlace(_place);
+
     });
   }
 
-  initialize();
+  $scope.$watch('search', function (searchfilter) {
+    if (searchfilter) {
+
+      var donorsFiltered = $filter("filter")($scope.donors, searchfilter);
+      if (!donorsFiltered) {
+        return;
+      }
+
+      if (donorsFiltered.length > 0) {
+
+        $scope.map.markers = [];
+
+        for (var i = 0; i < donorsFiltered.length; i++) {
+          var marker = new google.maps.Marker({
+            id: Date.now(),
+            coords: {
+              latitude: donorsFiltered[i].location[0],
+              longitude: donorsFiltered[i].location[1]
+            }
+          });
+
+          $scope.map.markers.push(marker);
+          bounds.extend(new google.maps.LatLng(marker.coords.latitude, marker.coords.longitude));
+        }
+
+        $scope.map2.setCenter(bounds.getCenter());
+        $scope.map2.fitBounds(bounds);
+
+      }
+    } else {
+      $scope.map.markers = [];
+
+        for (var i = 0; i < $scope.donors.length; i++) {
+          var marker = new google.maps.Marker({
+            id: Date.now(),
+            coords: {
+              latitude: $scope.donors[i].location[0],
+              longitude: $scope.donors[i].location[1]
+            }
+          });
+
+          $scope.map.markers.push(marker);
+          bounds.extend(new google.maps.LatLng(marker.coords.latitude, marker.coords.longitude));
+        }
+
+        $scope.map2.setCenter(bounds.getCenter());
+        $scope.map2.fitBounds(bounds);
+
+    }
+  });
+
+  $scope.initialize();
 
   var bounds = new google.maps.LatLngBounds();
   var interval;
@@ -76,45 +136,47 @@ app.controller('PrincipalCtrl', function ($scope, $state, uiGmapIsReady, $interv
   });
 
   $scope.addDonor = function () {
-    $scope.donor.location = [$scope.place.geometry.location.lat(), $scope.place.geometry.location.lng()];
-    $scope.donor.address = $scope.place.formatted_address;
-    DonorService.addDonor($scope.donor).then(function (data) {
-      if (data.data) {
-        $scope.showSimpleToast('The donor was added');
-       // $scope.donors.push(data.data.donor);
-        // $scope.map.markers.push(marker);
-        //   bounds.extend(new google.maps.LatLng(marker.coords.latitude, marker.coords.longitude));
-        
+    var place = JSON.parse(localStorage.getItem('place'));
 
-        // $scope.map2.setCenter(bounds.getCenter());
-        // $scope.map2.fitBounds(bounds);
-      };
-    }, function (error) {
-      $scope.showSimpleToast('An error ocurred '+ error.data.error.message );
-    })
+    if (place) {
+      $scope.donor.location = [parseFloat(place.lat), parseFloat(place.lng)];
+      $scope.donor.address = place.address;
+      DonorService.addDonor($scope.donor).then(function (data) {
+        if (data.data) {
+          $scope.showSimpleToast('The donor was added');
+          $scope.getDonors();
+          
+        };
+      }, function (error) {
+        $scope.showSimpleToast('An error ocurred ' + error.data.error.message);
+      });
+    } else {
+      $scope.showSimpleToast('Please Select the address');
+    }
   }
   $scope.getDonors = function () {
     $scope.donors = [];
-
     DonorService.getDonors().then(function (data) {
       if (data) {
         $scope.donors = data.data;
-        if(data.data.length){
-        for (var i = 0; i < data.data.length; i++) {
-          var marker = new google.maps.Marker({
-            id: Date.now(),
-            coords: {
-              latitude: data.data[i].location[0],
-              longitude: data.data[i].location[1]
-            }
-          });
+        if (data.data.length) {
+          for (var i = 0; i < data.data.length; i++) {
+            var marker = new google.maps.Marker({
+              id: Date.now(),
+              coords: {
+                latitude: data.data[i].location[0],
+                longitude: data.data[i].location[1]
+              },
+              cityName: data.data.address
+            });
 
-          $scope.map.markers.push(marker);
-          bounds.extend(new google.maps.LatLng(marker.coords.latitude, marker.coords.longitude));
-        }
+            $scope.map.markers.push(marker);
+           
+            bounds.extend(new google.maps.LatLng(marker.coords.latitude, marker.coords.longitude));
+          }
 
-        $scope.map2.setCenter(bounds.getCenter());
-        $scope.map2.fitBounds(bounds);
+          $scope.map2.setCenter(bounds.getCenter());
+          $scope.map2.fitBounds(bounds);
         }
       } else {
         cfpLoadingBar.complete();

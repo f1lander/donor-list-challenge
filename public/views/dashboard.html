@@ -25,7 +25,7 @@
                 </md-input-container>
                 <md-input-container class="md-block" flex-gt-xs>
                     <label>Address</label>
-                    <input id="autocomplete" ng-model="donor.address" placeholder="1100 Northwest 2nd Avenue ...">
+                    <input id="autocomplete" placeholder="1100 Northwest 2nd Avenue ...">
                 </md-input-container>
             </div>
             <div layout-gt-xs="row">
@@ -69,10 +69,14 @@
                 <md-button class="md-icon-button" ng-click="toggleLeft('left')" hide-gt-md aria-label="Menu">
                     <ng-md-icon style="fill: white" icon="menu"></ng-md-icon>
                 </md-button>
-                <h3>
-           Donor Map
-        </h3>
-
+                
+                
+                    <ng-md-icon style="fill: black" icon="search"></ng-md-icon>
+                
+                <md-input-container class="md-block" flex>
+                    <label>&nbsp;</label>
+                    <input ng-model="search" placeholder="">
+                </md-input-container>
             </div>
 
         </md-toolbar>
