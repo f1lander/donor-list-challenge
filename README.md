@@ -1,6 +1,8 @@
-# donor-list-challenge
-Donor List Address verification and mapping
+# donor-list
 
-*1. clone this repo
-*2. npm install
-*3. npm start
+```sh
+$ git clone https://github.com/f1lander/donor-list-challenge.git
+$ cd donor-list-challenge
+$ npm install
+$ npm start
+```
