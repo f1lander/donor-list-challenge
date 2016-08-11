@@ -1,10 +1,15 @@
 # donor-list
 
+This a MEAN Stack example which use google maps api, you can see how to build and with simple Create and Read operations.
+
 ```sh
+
 $ git clone https://github.com/f1lander/donor-list-challenge.git
 $ cd donor-list-challenge
 $ npm install
+$ bower install
 $ npm start
+
 ```
 
 License
